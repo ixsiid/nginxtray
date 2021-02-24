@@ -27,6 +27,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace NginxTray
 {
@@ -88,5 +89,15 @@ namespace NginxTray
             Properties.Settings.Default.Save();
         }
 
+        private void NginxSettingsDirectoryOpenButton_Click(object sender, EventArgs e)
+        {
+            using (var ofd = new OpenFileDialog() { FileName = "SelectFolder", Filter = "Folder|.", CheckFileExists = false })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    textBoxNginxDirectory.Text = Path.GetDirectoryName(ofd.FileName);
+                }
+            }
+        }
     }
 }

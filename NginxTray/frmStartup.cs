@@ -33,11 +33,16 @@ namespace NginxTray
 {
     public partial class frmStartup : Form
     {
+        private bool nginxLaunched;
+
         public frmStartup()
         {
             InitializeComponent();
 
             base.SetVisibleCore(false); // Hide this form at startup
+
+            StopNginxMenuItem.Enabled = false;
+            nginxLaunched = false;
         }
 
         // Start Nginx function
@@ -56,7 +61,12 @@ namespace NginxTray
             if (ProcM.StartProcess(nginxdirectory, nginxprocess) == false) // If there are problems, show a ballontip error
             {
                 TrayIcon.ShowBalloonTip(20000, "Nginx does not start", "The file path or process name could be wrong", ToolTipIcon.Error);
-            };
+            } else
+            {
+                nginxLaunched = true;
+                StartNginxMenuItem.Enabled = false;
+                StopNginxMenuItem.Enabled = true;
+            }
         }
 
         // Stop Nginx function
@@ -69,6 +79,10 @@ namespace NginxTray
             nginxprocess = Properties.Settings.Default.NginxProcess.Replace(".exe", "");
 
             ProcM.StopProcess(nginxprocess);
+
+            nginxLaunched = false;
+            StartNginxMenuItem.Enabled = true;
+            StopNginxMenuItem.Enabled = false;
         }
 
         // Start PHP function
